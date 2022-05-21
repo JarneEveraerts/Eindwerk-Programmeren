@@ -1,0 +1,12 @@
+1,loopband
+2,loopband
+3,loopband
+4,loopband
+5,loopband
+6,loopband
+7,fiets
+8,fiets
+9,fiets
+10,fiets
+11,fiets
+12,fiets
