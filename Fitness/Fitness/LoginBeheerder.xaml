@@ -1,0 +1,21 @@
+﻿<Window x:Class="Fitness.LoginBeheerder"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Fitness"
+        mc:Ignorable="d"
+        Title="Login Beheerder" Height="450" Width="800">
+    <Grid x:Name="Wnd_LoginBeheerder" Margin="0,10,0,12">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="13*" />
+            <ColumnDefinition Width="7*" />
+        </Grid.ColumnDefinitions>
+        <TextBox x:Name="Txt_Username" ToolTip="Username" HorizontalAlignment="Left" Height="30" Margin="320,144,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="264" AutomationProperties.HelpText="Username" Grid.ColumnSpan="2" />
+        <TextBox x:Name="Txt_Password" ToolTip="Password" HorizontalAlignment="Left" Height="30" Margin="320,196,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="264" Grid.ColumnSpan="2" />
+        <Button x:Name="Btn_Login" Content="Login" HorizontalAlignment="Left" Height="37" Margin="264,250,0,0" VerticalAlignment="Top" Width="111" Click="Btn_Login_Click" />
+        <Button x:Name="Btn_Cancel" Content="Cancel" HorizontalAlignment="Left" Height="37" Margin="408,250,0,0" VerticalAlignment="Top" Width="120" RenderTransformOrigin="0.527,0.53" Grid.ColumnSpan="2" Click="Btn_Cancel_Click" />
+        <Label Content="Username:" HorizontalAlignment="Left" Margin="229,141,0,0" VerticalAlignment="Top" />
+        <Label Content="Password:" HorizontalAlignment="Center" VerticalAlignment="Center" />
+    </Grid>
+</Window>

@@ -1,0 +1,14 @@
+﻿<Window x:Class="Fitness.LoginWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Fitness"
+        mc:Ignorable="d"
+        Title="Login Fitness" Height="450" Width="800">
+    <Grid x:Name="Wnd_Login" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Label x:Name="lbl_Inlog" Content="Login Fitness" Margin="0,82,0,252" FontSize="36" HorizontalAlignment="Center" FontFamily="Agency FB" />
+        <Button x:Name="Btn_LoginBeheerder" Content="Beheerder" HorizontalAlignment="Center" Height="38" VerticalAlignment="Top" Width="180" Margin="0,219,0,0" Click="Btn_LoginBeheerder_Click" />
+        <Button x:Name="Btn_LoginKlant" Content="Klant" HorizontalAlignment="Center" Height="38" VerticalAlignment="Top" Width="180" Margin="0,275,0,0" Click="Btn_LoginKlant_Click" />
+    </Grid>
+</Window>
