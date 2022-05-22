@@ -8,17 +8,17 @@
         Title="Klant" Height="450" Width="800">
     <Grid Height="Auto" Margin="0,0,0,-6">
         <Grid x:Name="Grd_KlantInfo" Margin="0,0,0,350">
-            <TextBox x:Name="Txt_FirstName" HorizontalAlignment="Left" Height="20" Margin="93,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" IsReadOnlyCaretVisible="True" Width="100" IsManipulationEnabled="True" />
-            <TextBox x:Name="Txt_Name" HorizontalAlignment="Left" Height="20" Margin="93,34,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="100" IsReadOnlyCaretVisible="True" IsManipulationEnabled="True" />
+            <TextBox x:Name="Txt_FirstName" HorizontalAlignment="Left" Height="20" Margin="93,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" IsReadOnlyCaretVisible="True" Width="100" IsManipulationEnabled="True" Text="{Binding Mode=OneWay,Path=FirstName}" />
+            <TextBox x:Name="Txt_Name" HorizontalAlignment="Left" Height="20" Margin="93,34,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="100" IsReadOnlyCaretVisible="True" IsManipulationEnabled="True" Text="{Binding Mode=OneWay, Path=LastName}" />
             <Label Content="Name:" HorizontalAlignment="Left" Margin="55,32,0,0" VerticalAlignment="Top" FontSize="10" Height="23" />
             <Label Content="First Name:" HorizontalAlignment="Left" Margin="33,9,0,0" VerticalAlignment="Top" FontSize="10" Height="23" />
-            <TextBox x:Name="Txt_Date" HorizontalAlignment="Left" Height="20" Margin="261,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" IsReadOnlyCaretVisible="True" Width="100" IsManipulationEnabled="True" />
-            <TextBox x:Name="Txt_Place" HorizontalAlignment="Left" Height="20" Margin="261,34,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="100" IsReadOnlyCaretVisible="True" IsManipulationEnabled="True" />
+            <TextBox x:Name="Txt_Date" HorizontalAlignment="Left" Height="20" Margin="261,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" IsReadOnlyCaretVisible="True" Width="100" IsManipulationEnabled="True" Text="{Binding Mode=OneWay,Path=BirthDate}" />
+            <TextBox x:Name="Txt_Place" HorizontalAlignment="Left" Height="20" Margin="261,34,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="100" IsReadOnlyCaretVisible="True" IsManipulationEnabled="True" Text="{Binding Mode=OneWay,Path=Place}" />
             <Label Content="Gemeente:" HorizontalAlignment="Left" Margin="198,32,0,0" VerticalAlignment="Top" FontSize="10" Height="24" />
             <Label Content="Birthdate:" HorizontalAlignment="Left" Margin="204,6,0,0" VerticalAlignment="Top" FontSize="10" Height="24" />
-            <TextBox x:Name="Txt_Subsciption" HorizontalAlignment="Left" Height="20" Margin="440,34,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="100" IsReadOnlyCaretVisible="True" IsManipulationEnabled="True" />
+            <TextBox x:Name="Txt_Subsciption" HorizontalAlignment="Left" Height="20" Margin="440,34,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="100" IsReadOnlyCaretVisible="True" IsManipulationEnabled="True" Text="{Binding Mode=OneWay,Path=Subsciption}" />
             <Label Content="Subscription:" HorizontalAlignment="Left" Margin="368,29,0,0" VerticalAlignment="Top" FontSize="10" Height="24" />
-            <TextBox x:Name="Txt_Interest" HorizontalAlignment="Left" Height="20" Margin="440,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" IsReadOnlyCaretVisible="True" Width="100" IsManipulationEnabled="True" />
+            <TextBox x:Name="Txt_Interest" HorizontalAlignment="Left" Height="20" Margin="440,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" IsReadOnlyCaretVisible="True" Width="100" IsManipulationEnabled="True" Text="{Binding Mode=OneWay,Path=Interest}" />
             <Label Content="Interest:" HorizontalAlignment="Left" Margin="390,6,0,0" VerticalAlignment="Top" FontSize="10" Height="24" />
         </Grid>
         <Grid x:Name="Grd_KlantReservation" HorizontalAlignment="Left" Height="123" Margin="35,90,0,0" VerticalAlignment="Top" Width="425">

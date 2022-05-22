@@ -61,10 +61,12 @@ PRIMARY KEY CLUSTERED
 ) ON [PRIMARY];
 
 CREATE TABLE [dbo].[reservatie] (
-  [R_Id] [int] NOT NULL UNIQUE,
+  [R_Id] [int] IDENTITY(1,1) NOT NULL UNIQUE,
+  [R_KId] [varchar](45) NOT NULL,
+  [R_FirstName] [varchar](45) NOT NULL,
+  [R_Name] [varchar](45) NOT NULL,
   [R_Email] [varchar](45) NOT NULL,
   [R_Toestel] [varchar](45) NOT NULL,
-  [R_ToestelId] [int] NOT NULL,
   [R_Date] [DATE] NOT NULL,
   [R_Slot] [int] NOT NULL
 PRIMARY KEY CLUSTERED
@@ -78,8 +80,6 @@ VALUES ('admin','admin')
 
 INSERT INTO status (S_Name)
 VALUES ('Beschikbaar')
-INSERT INTO status (S_Name)
-VALUES ('Gereserveerd')
 INSERT INTO status (S_Name)
 VALUES ('Onderhoud')
 

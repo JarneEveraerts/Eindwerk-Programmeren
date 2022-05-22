@@ -20,19 +20,30 @@ namespace Fitness
     ///
     public partial class Klant : Window
     {
-        public record ListBoxTimeItem(int Value, string Label);//class zonder logic bedoeld voor data bij te houde
-        public int SelectedTimeslot { get; set; }
+        public string Email { get; set; }
+        public string LastName { get; private set; }
+        public string Place { get; private set; }
+        public string BirthDate { get; private set; }
+        public string Interest { get; private set; }
+        public string Subsciption { get; private set; }
+        public string Id { get; private set; }
+        public string FirstName { get; private set; }
+        public List<int> SelectedSlots { get; private set; }
+        public List<int> ReservedSlots { get; private set; }
 
         public Klant(List<string> dataList)
         {
             this.DataContext = this;
+
+            Id = dataList[0];
+            FirstName = dataList[1];
+            LastName = dataList[2];
+            Email = dataList[3];
+            Place = dataList[4];
+            BirthDate = dataList[5];
+            Interest = dataList[6];
+            Subsciption = dataList[7];
             InitializeComponent();
-            Txt_FirstName.Text = dataList[0];
-            Txt_Name.Text = dataList[1];
-            Txt_Place.Text = dataList[3];
-            Txt_Date.Text = dataList[4];
-            Txt_Interest.Text = dataList[5];
-            Txt_Subsciption.Text = dataList[6];
             SetupMachineSelection();
             SetupDate();
         }
@@ -56,7 +67,15 @@ namespace Fitness
         {
             if (Dpr_Date.SelectedDate.HasValue)
             {
-                List<int> Slots = DbContext.AvailableSlots(Dpr_Date.SelectedDate.Value, Cmb_Machines.Text);
+                DateTime date = Dpr_Date.SelectedDate.Value;
+                ReservedSlots = DbContext.ReservedSlots(Email, date);
+                Lsb_TimeSlot.Items.Clear();
+                if (DbContext.ReservatieCount(Email, date) == 4)
+                {
+                    MessageBox.Show("Max 4 slots per day", "Error Detected in input", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                };
+                List<int> Slots = DbContext.AvailableSlots(date, Cmb_Machines.Text, Email, ReservedSlots);
                 foreach (int s in Slots)
                 {
                     Lsb_TimeSlot.Items.Add($"{s}u: 60min");
@@ -84,44 +103,46 @@ namespace Fitness
 
         private void Lsb_TimeSlot_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (Lsb_TimeSlot.SelectedItems.Count == 0) return;
             string selectedText = Lsb_TimeSlot.SelectedItems[Lsb_TimeSlot.SelectedItems.Count - 1].ToString();
-            if (Lsb_TimeSlot.SelectedItems.Count < 5)
-            {
-                List<int> selectedList = new();
-                foreach (string item in Lsb_TimeSlot.SelectedItems)
-                {
-                    selectedList.Add(int.Parse(item.Substring(0, item.IndexOf('u'))));
-                }
-                selectedList.Sort();
-                int i = 0;
-                foreach (int s in selectedList)
-                {
-                    i = 0;
-                    foreach (int check in selectedList)
-                    {
-                        if (s + 1 == check || s - 1 == check) i++;
-                    }
-                    if (i == 2) break;
-                }
-                if (i == 2)
-                {
-                    MessageBox.Show("Max 2 connected time-slots", "Error Detected in input", MessageBoxButton.OK, MessageBoxImage.Error);
-                    Lsb_TimeSlot.SelectedItems.Remove(selectedText);
-                }
-            }
-            else
+            if (Lsb_TimeSlot.SelectedItems.Count + DbContext.ReservatieCount(Email, Dpr_Date.SelectedDate.Value) > 4)
             {
                 MessageBox.Show("Max 4 slots per day", "Error Detected in input", MessageBoxButton.OK, MessageBoxImage.Error);
                 Lsb_TimeSlot.SelectedItems.Remove(selectedText);
             }
+            List<int> selectedList = new();
+            foreach (string item in Lsb_TimeSlot.SelectedItems)
+            {
+                selectedList.Add(int.Parse(item.Substring(0, item.IndexOf('u'))));
+            }
+            selectedList.Sort();
+            int i = 0;
+            foreach (int s in selectedList)
+            {
+                i = 0;
+                foreach (int check in selectedList)
+                {
+                    if (s + 1 == check || s - 1 == check) i++;
+                }
+                if (i == 2) break;
+            }
+            if (i == 2)
+            {
+                MessageBox.Show("Max 2 connected time-slots", "Error Detected in input", MessageBoxButton.OK, MessageBoxImage.Error);
+                Lsb_TimeSlot.SelectedItems.Remove(selectedText);
+            }
+            SelectedSlots = selectedList;
         }
 
         private void Btn_Reserveer_Click(object sender, RoutedEventArgs e)
         {
-            foreach (var item in Lsb_TimeSlot.SelectedItems)
+            foreach (int item in SelectedSlots)
             {
-                MessageBox.Show(item.ToString());
+                DbContext.Reserveer(this, Cmb_Machines.SelectedValue.ToString(), Dpr_Date.SelectedDate.Value, item);
             }
+            SelectedSlots.Clear();
+            Lsb_TimeSlot.SelectedItems.Clear();
+            SetupSlots();
         }
     }
 }
