@@ -21,9 +21,8 @@ namespace Fitness
     {
         private LoginWindow _loginWindow;
 
-        public LoginBeheerder(LoginWindow loginWindow)
+        public LoginBeheerder()
         {
-            _loginWindow = loginWindow;
             InitializeComponent();
         }
 
@@ -31,11 +30,12 @@ namespace Fitness
         {
             string password = Txt_Password.Text;
             string username = Txt_Username.Text;
-            DbContext.LoginBeheerder(username, password);
+            DbContext.LoginBeheerder(username, password, this);
         }
 
         private void Btn_Cancel_Click(object sender, RoutedEventArgs e)
         {
+            _loginWindow = new();
             _loginWindow.Show();
             this.Hide();
         }

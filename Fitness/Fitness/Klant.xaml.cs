@@ -28,7 +28,7 @@ namespace Fitness
         public string Subsciption { get; private set; }
         public string Id { get; private set; }
         public string FirstName { get; private set; }
-        public List<int> SelectedSlots { get; private set; }
+        public List<int> SelectedSlots { get; private set; } = new();
         public List<int> ReservedSlots { get; private set; }
 
         public Klant(List<string> dataList)
@@ -85,6 +85,7 @@ namespace Fitness
 
         private void Dpr_Date_DateChanged(Object sender, EventArgs e)
         {
+            if (!Dpr_Date.SelectedDate.HasValue) return;
             DateTime selected = Dpr_Date.SelectedDate.Value;
             if (DateTime.Compare(selected, DateTime.Today.AddDays(1)) >= 0 && DateTime.Compare(selected, DateTime.Today.AddDays(7)) <= 0)
             {
@@ -142,6 +143,7 @@ namespace Fitness
             }
             SelectedSlots.Clear();
             Lsb_TimeSlot.SelectedItems.Clear();
+            Dpr_Date.Text = string.Empty;
             SetupSlots();
         }
     }

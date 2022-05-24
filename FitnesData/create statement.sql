@@ -51,7 +51,7 @@ PRIMARY KEY CLUSTERED
 ) ON [PRIMARY];
 
 CREATE TABLE [dbo].[toestellen] (
-  [T_Id] [int] NOT NULL UNIQUE,
+  [T_Id] [int] IDENTITY(1,1) NOT NULL UNIQUE,
   [T_Name] [varchar](45) NOT NULL,
   [T_Status] [int] NOT NULL
 PRIMARY KEY CLUSTERED

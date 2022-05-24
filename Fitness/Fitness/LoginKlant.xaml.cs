@@ -21,22 +21,22 @@ namespace Fitness
     {
         private LoginWindow _loginWindow;
 
-        public LoginKlant(LoginWindow loginWindow)
+        public LoginKlant()
         {
-            _loginWindow = loginWindow;
             InitializeComponent();
         }
 
         private void Btn_Login_Click(object sender, RoutedEventArgs e)
         {
             string email = Txt_Email.Text;
-            DbContext.LoginKlant(_loginWindow, this, email);
+            DbContext.LoginKlant(this, email);
         }
 
         private void Btn_Cancel_Click(object sender, RoutedEventArgs e)
         {
+            _loginWindow = new();
             _loginWindow.Show();
-            this.Hide();
+            this.Close();
         }
 
         private void Txt_Email_TextChanged(object sender, TextChangedEventArgs e)

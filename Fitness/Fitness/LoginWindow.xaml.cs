@@ -26,20 +26,20 @@ namespace Fitness
         public LoginWindow()
         {
             InitializeComponent();
-            loginKlant = new(this);
-            loginBeheerder = new(this);
         }
 
         private void Btn_LoginBeheerder_Click(object sender, RoutedEventArgs e)
         {
+            loginBeheerder = new();
             loginBeheerder.Show();
-            this.Hide();
+            this.Close();
         }
 
         private void Btn_LoginKlant_Click(object sender, RoutedEventArgs e)
         {
+            loginKlant = new();
             loginKlant.Show();
-            this.Hide();
+            this.Close();
         }
     }
 }

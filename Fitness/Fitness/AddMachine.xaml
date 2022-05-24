@@ -1,0 +1,15 @@
+﻿<Window x:Class="Fitness.AddMachine"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Fitness"
+        mc:Ignorable="d"
+        Title="AddMachine" Height="450" Width="800">
+    <Grid>
+        <Button x:Name="Btn_Add" Content="Add" HorizontalAlignment="Left" Height="37" Margin="270,245,0,0" VerticalAlignment="Top" Width="111" Click="Btn_Add_Click" />
+        <Button x:Name="Btn_Cancel" Content="Cancel" HorizontalAlignment="Left" Height="37" Margin="395,245,0,0" VerticalAlignment="Top" Width="111" Click="Btn_Cancel_Click" />
+        <Label Content="Machine" HorizontalAlignment="Left" Height="25" Margin="298,0,0,0" VerticalAlignment="Center" />
+        <TextBox x:Name="Txt_Input" HorizontalAlignment="Left" Height="20" Margin="358,0,0,0" TextWrapping="Wrap" VerticalAlignment="Center" Width="100" IsReadOnlyCaretVisible="True" IsManipulationEnabled="True" Text="{Binding LastName, Mode=OneWay}" />
+    </Grid>
+</Window>
