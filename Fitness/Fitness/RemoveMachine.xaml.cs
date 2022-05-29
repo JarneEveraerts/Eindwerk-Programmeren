@@ -19,24 +19,33 @@ namespace Fitness
     /// </summary>
     public partial class RemoveMachine : Window
     {
+        private Beheerder beheerder;
         public int Id { get; private set; }
         public string Name { get; private set; }
 
-        public RemoveMachine()
+        public RemoveMachine(Beheerder beheerder)
         {
             InitializeComponent();
             Setup();
+            this.beheerder = beheerder;
         }
 
         private void Btn_Remove_Click(object sender, RoutedEventArgs e)
         {
+            if (Cmb_Machines.Text == "")
+            {
+                MessageBox.Show($"Empty field Detected", "Input Error!", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
             MessageBoxResult check = MessageBox.Show($"are u sure u want to delete: {Id} {Name}?", "Delete confirmation!", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No);
             if (check == MessageBoxResult.Yes)
             {
                 DbContext.RemoveMachine(Id, Name);
                 Cmb_Machines.Items.Clear();
                 Setup();
-                Beheerder.Setup();
+                beheerder.Setup();
+                Id = 0;
+                Name = "";
             }
         }
 

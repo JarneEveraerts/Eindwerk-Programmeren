@@ -18,31 +18,40 @@ namespace Fitness
     /// Interaction logic for Klant.xaml
     /// </summary>
     ///
-    public partial class Klant : Window
+    public class Klant
     {
         public string Email { get; set; }
-        public string LastName { get; private set; }
-        public string Place { get; private set; }
-        public string BirthDate { get; private set; }
-        public string Interest { get; private set; }
-        public string Subsciption { get; private set; }
-        public string Id { get; private set; }
-        public string FirstName { get; private set; }
+        public string LastName { get; set; }
+        public string Place { get; set; }
+        public string BirthDate { get; set; }
+        public string Interest { get; set; }
+        public string Subsciption { get; set; }
+        public string Id { get; set; }
+        public string FirstName { get; set; }
+
+        public Klant(List<string> data)
+        {
+            Id = data[0];
+            FirstName = data[1];
+            LastName = data[2];
+            Email = data[3];
+            Place = data[4];
+            BirthDate = data[5];
+            Interest = data[6];
+            Subsciption = data[7];
+        }
+    }
+
+    public partial class Reservatie : Window
+    {
         public List<int> SelectedSlots { get; private set; } = new();
         public List<int> ReservedSlots { get; private set; }
+        public Klant Klant { get; set; }
 
-        public Klant(List<string> dataList)
+        public Reservatie(List<string> dataList)
         {
-            this.DataContext = this;
-
-            Id = dataList[0];
-            FirstName = dataList[1];
-            LastName = dataList[2];
-            Email = dataList[3];
-            Place = dataList[4];
-            BirthDate = dataList[5];
-            Interest = dataList[6];
-            Subsciption = dataList[7];
+            Klant = new Klant(dataList);
+            this.DataContext = Klant;
             InitializeComponent();
             SetupMachineSelection();
             SetupDate();
@@ -68,14 +77,14 @@ namespace Fitness
             if (Dpr_Date.SelectedDate.HasValue)
             {
                 DateTime date = Dpr_Date.SelectedDate.Value;
-                ReservedSlots = DbContext.ReservedSlots(Email, date);
+                ReservedSlots = DbContext.ReservedSlots(Klant.Email, date);
                 Lsb_TimeSlot.Items.Clear();
-                if (DbContext.ReservatieCount(Email, date) == 4)
+                if (DbContext.ReservatieCount(Klant.Email, date) == 4)
                 {
                     MessageBox.Show("Max 4 slots per day", "Error Detected in input", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 };
-                List<int> Slots = DbContext.AvailableSlots(date, Cmb_Machines.Text, Email, ReservedSlots);
+                List<int> Slots = DbContext.AvailableSlots(date, Cmb_Machines.Text, Klant.Email, ReservedSlots);
                 foreach (int s in Slots)
                 {
                     Lsb_TimeSlot.Items.Add($"{s}u: 60min");
@@ -106,7 +115,7 @@ namespace Fitness
         {
             if (Lsb_TimeSlot.SelectedItems.Count == 0) return;
             string selectedText = Lsb_TimeSlot.SelectedItems[Lsb_TimeSlot.SelectedItems.Count - 1].ToString();
-            if (Lsb_TimeSlot.SelectedItems.Count + DbContext.ReservatieCount(Email, Dpr_Date.SelectedDate.Value) > 4)
+            if (Lsb_TimeSlot.SelectedItems.Count + DbContext.ReservatieCount(Klant.Email, Dpr_Date.SelectedDate.Value) > 4)
             {
                 MessageBox.Show("Max 4 slots per day", "Error Detected in input", MessageBoxButton.OK, MessageBoxImage.Error);
                 Lsb_TimeSlot.SelectedItems.Remove(selectedText);
@@ -139,7 +148,7 @@ namespace Fitness
         {
             foreach (int item in SelectedSlots)
             {
-                DbContext.Reserveer(this, Cmb_Machines.SelectedValue.ToString(), Dpr_Date.SelectedDate.Value, item);
+                DbContext.Reserveer(Klant, Cmb_Machines.SelectedValue.ToString(), Dpr_Date.SelectedDate.Value, item);
             }
             SelectedSlots.Clear();
             Lsb_TimeSlot.SelectedItems.Clear();

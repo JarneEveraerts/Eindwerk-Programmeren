@@ -1,0 +1,15 @@
+﻿<Window x:Class="Fitness.Beheerder"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Fitness"
+        mc:Ignorable="d"
+        Title="Beheerder" Height="450" Width="800" Closed="OnClosed">
+    <Grid  Width="400" VerticalAlignment="Center" HorizontalAlignment="Center">
+        <DataGrid Name="Dtg_Machines" HorizontalAlignment="Left" MinWidth="200" Height="300" Margin="10,10,0,0" VerticalAlignment="Top" />
+        <Button x:Name="Btn_RemoveMachine" Content="Remove" Width="75"  Height="30" Click="Btn_RemoveMachine_Click" Margin="260,32,65,248" />
+        <Button x:Name="Btn_AddMachine" Content="Add" Width="75" Height="30" Click="Btn_AddMachine_Click" Margin="260,67,65,213" />
+        <Button x:Name="Btn_RemoveMachine_Copy" Content="Onderhoud" Width="75"  Height="30" Click="Btn_Status_Click" Margin="260,102,65,178" />
+    </Grid>
+</Window>

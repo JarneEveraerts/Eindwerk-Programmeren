@@ -29,19 +29,25 @@ namespace Fitness
             Setup();
         }
 
-        public static void Setup()
+        public void Setup()
         {
+            List<Machine> machines = new();
+            foreach (List<string> machine in DbContext.MachineData())
+            {
+                machines.Add(new() { Id = machine[0], Name = machine[1], Status = machine[2] });
+            }
+            Dtg_Machines.ItemsSource = machines;
         }
 
         private void Btn_RemoveMachine_Click(object sender, RoutedEventArgs e)
         {
-            RemoveMachine removeMachine = new();
+            RemoveMachine removeMachine = new(this);
             removeMachine.Show();
         }
 
         private void Btn_AddMachine_Click(object sender, RoutedEventArgs e)
         {
-            AddMachine addMachine = new();
+            AddMachine addMachine = new(this);
             addMachine.Show();
         }
 
@@ -52,8 +58,15 @@ namespace Fitness
 
         private void Btn_Status_Click(object sender, RoutedEventArgs e)
         {
-            Onderhoud onderhoud = new();
+            Onderhoud onderhoud = new(this);
             onderhoud.Show();
         }
+    }
+
+    public class Machine
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public string Status { get; set; }
     }
 }

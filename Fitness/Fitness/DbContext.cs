@@ -45,7 +45,7 @@ public static class DbContext
 
     public static void LoginKlant(LoginKlant loginKlant, string? email)
     {
-        List<string> dataList = new();
+        List<string> dataKlant = new();
         using SqlConnection connect = new(Services.Configurator.DbConnection);
         connect.Open();
         string query = $"SELECT * FROM klant WHERE K_Email = '{email}';";
@@ -60,22 +60,22 @@ public static class DbContext
                     switch (i)
                     {
                         case 6:
-                            dataList.Add(CheckInterest(reader.GetSqlValue(i).ToString()));
+                            dataKlant.Add(CheckInterest(reader.GetSqlValue(i).ToString()));
                             break;
 
                         case 7:
-                            dataList.Add(CheckSubscription(reader.GetSqlValue(i).ToString()));
+                            dataKlant.Add(CheckSubscription(reader.GetSqlValue(i).ToString()));
                             break;
 
                         default:
-                            dataList.Add(reader.GetSqlValue(i).ToString());
+                            dataKlant.Add(reader.GetSqlValue(i).ToString());
                             break;
                     }
                 }
             }
             connect.Close();
             reader.Close();
-            Klant klant = new(dataList);
+            Reservatie klant = new(dataKlant);
             klant.Show();
             loginKlant.Close();
         }
@@ -116,6 +116,21 @@ public static class DbContext
             string query = $"SELECT S_Name FROM subscription WHERE S_Id = '{id}';";
             SqlCommand cmd = new(query, connect);
             output = cmd.ExecuteScalar().ToString();
+            connect.Close();
+        }
+        return output;
+    }
+
+    public static string CheckStatusId(string id)
+    {
+        string output = "";
+
+        using (SqlConnection connect = new(Services.Configurator.DbConnection))
+        {
+            connect.Open();
+            string query = $"SELECT S_Name FROM status WHERE S_Id = '{id}';";
+            SqlCommand cmd = new(query, connect);
+            output = (string)cmd.ExecuteScalar();
             connect.Close();
         }
         return output;
@@ -309,5 +324,23 @@ public static class DbContext
             }
         }
         return status;
+    }
+
+    public static List<List<string>> MachineData()
+    {
+        using SqlConnection connect = new(Services.Configurator.DbConnection);
+        List<List<string>> Reservations = new();
+        string query = $"SELECT * FROM toestellen;";
+        SqlCommand cmd = new(query, connect);
+        connect.Open();
+        using SqlDataReader reader = cmd.ExecuteReader();
+        if (reader.HasRows)
+        {
+            while (reader.Read())
+            {
+                Reservations.Add(new() { reader.GetInt32(0).ToString(), reader.GetString(1), CheckStatusId(reader.GetInt32(2).ToString()) });
+            }
+        }
+        return Reservations;
     }
 }

@@ -19,12 +19,14 @@ namespace Fitness
     /// </summary>
     public partial class Onderhoud : Window
     {
+        private Beheerder beheerder;
         public int Id { get; private set; }
         public string Name { get; private set; }
         public int Status { get; private set; }
 
-        public Onderhoud()
+        public Onderhoud(Beheerder beheer)
         {
+            beheerder = beheer;
             InitializeComponent();
             Setup();
         }
@@ -32,6 +34,7 @@ namespace Fitness
         private void Cmb_Machines_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (!Cmb_Machines.HasItems) return;
+            if (Cmb_Machines.SelectedValue == null) return;
             string[] data = Cmb_Machines.SelectedValue.ToString().Split(':');
             Id = int.Parse(data[0]);
             Name = data[1].Replace(" ", "");
@@ -64,10 +67,17 @@ namespace Fitness
 
         private void Btn_Change_Click(object sender, RoutedEventArgs e)
         {
+            if (Cmb_Machines.Text == "")
+            {
+                MessageBox.Show($"Empty field Detected", "Input Error!", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
             MessageBoxResult check = MessageBox.Show($"are u sure u want to chanche status off: {Id} {Name}?", "Update confirmation!", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No);
             if (check == MessageBoxResult.Yes)
             {
                 DbContext.UpdateStatus(Id, Name, Status);
+                Cmb_Machines.Text = "";
+                beheerder.Setup();
             }
         }
     }

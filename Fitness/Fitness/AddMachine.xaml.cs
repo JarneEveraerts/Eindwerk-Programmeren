@@ -19,8 +19,11 @@ namespace Fitness
     /// </summary>
     public partial class AddMachine : Window
     {
-        public AddMachine()
+        private Beheerder beheerder;
+
+        public AddMachine(Beheerder beheer)
         {
+            beheerder = beheer;
             InitializeComponent();
         }
 
@@ -51,7 +54,7 @@ namespace Fitness
 
         private void Btn_Cancel_Click(object sender, RoutedEventArgs e)
         {
-            Beheerder.Setup();
+            beheerder.Setup();
             this.Close();
         }
     }
