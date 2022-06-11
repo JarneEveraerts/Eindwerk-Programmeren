@@ -33,17 +33,20 @@ namespace Fitness
             if (input == "")
             {
                 Error("empty field detected");
+                Txt_Input.Text = "";
                 return;
             }
             if (input.Any(char.IsDigit) || input.Any(char.IsPunctuation))
             {
                 Error("Use of illigal characters");
+                Txt_Input.Text = "";
                 return;
             }
             MessageBoxResult check = MessageBox.Show($"are u sure u want to Add: {input}?", "Add confirmation!", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No);
             if (check == MessageBoxResult.Yes)
             {
                 DbContext.AddMachine(input);
+                Txt_Input.Text = "";
             }
         }
 

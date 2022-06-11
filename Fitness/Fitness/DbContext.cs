@@ -251,11 +251,11 @@ public static class DbContext
 
     #endregion Count
 
-    public static void Reserveer(Klant klant, string machine, DateTime date, int slot)
+    public static void Reserveer(Costumer costumer, string machine, DateTime date, int slot)
     {
         using SqlConnection connect = new(Services.Configurator.DbConnection);
         connect.Open();
-        string query = $"INSERT INTO Reservatie(R_Kid,R_FirstName,R_Name,R_Email,R_Toestel,R_Date,R_Slot) VALUES('{klant.Id}','{klant.FirstName}','{klant.LastName}','{klant.Email}','{machine}','{date:yyyyMMdd}','{slot}');";
+        string query = $"INSERT INTO Reservatie(R_Kid,R_FirstName,R_Name,R_Email,R_Toestel,R_Date,R_Slot) VALUES('{costumer.Id}','{costumer.FirstName}','{costumer.LastName}','{costumer.Email}','{machine}','{date:yyyyMMdd}','{slot}');";
         SqlCommand cmd = new(query, connect);
         cmd.ExecuteNonQuery();
     }
@@ -280,11 +280,11 @@ public static class DbContext
         MessageBox.Show("Deletion complete", "Deletion complete", MessageBoxButton.OK, MessageBoxImage.Exclamation);
     }
 
-    public static void UpdateStatus(int id, string name, int status)
+    public static void UpdateStatus(Machine machine, int status)
     {
         using SqlConnection connect = new(Services.Configurator.DbConnection);
         connect.Open();
-        string query = $"UPDATE Toestellen SET T_Status = '{status}'WHERE T_Id ='{id}' AND T_Name = '{name}' ;";
+        string query = $"UPDATE Toestellen SET T_Status = '{status}'WHERE T_Id ='{machine.Id}' AND T_Name = '{machine.Name}' ;";
         SqlCommand cmd = new(query, connect);
         cmd.ExecuteNonQuery();
         MessageBox.Show("Update complete", "Update complete", MessageBoxButton.OK, MessageBoxImage.Exclamation);

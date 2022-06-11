@@ -75,7 +75,7 @@ namespace Fitness
             MessageBoxResult check = MessageBox.Show($"are u sure u want to chanche status off: {Id} {Name}?", "Update confirmation!", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No);
             if (check == MessageBoxResult.Yes)
             {
-                DbContext.UpdateStatus(Id, Name, Status);
+                //DbContext.UpdateStatus(Id, Name, Status);
                 Cmb_Machines.Text = "";
                 beheerder.Setup();
             }

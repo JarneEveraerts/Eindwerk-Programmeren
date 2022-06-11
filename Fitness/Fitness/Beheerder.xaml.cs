@@ -21,6 +21,7 @@ namespace Fitness
     public partial class Beheerder : Window
     {
         public string Username { get; private set; }
+        public Machine SelectedMachine { get; private set; }
 
         public Beheerder(string username)
         {
@@ -37,18 +38,11 @@ namespace Fitness
                 machines.Add(new() { Id = machine[0], Name = machine[1], Status = machine[2] });
             }
             Dtg_Machines.ItemsSource = machines;
-        }
-
-        private void Btn_RemoveMachine_Click(object sender, RoutedEventArgs e)
-        {
-            RemoveMachine removeMachine = new(this);
-            removeMachine.Show();
-        }
-
-        private void Btn_AddMachine_Click(object sender, RoutedEventArgs e)
-        {
-            AddMachine addMachine = new(this);
-            addMachine.Show();
+            List<string> status = DbContext.ShowStatus();
+            foreach (string item in status)
+            {
+                Cmb_Status.Items.Add(item);
+            }
         }
 
         private void OnClosed(object sender, EventArgs e)
@@ -56,17 +50,10 @@ namespace Fitness
             App.Current.Shutdown();
         }
 
-        private void Btn_Status_Click(object sender, RoutedEventArgs e)
+        private void Dtg_Machines_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Onderhoud onderhoud = new(this);
-            onderhoud.Show();
+            SelectedMachine = (Machine)Dtg_Machines.SelectedItem;
+            this.DataContext = SelectedMachine;
         }
-    }
-
-    public class Machine
-    {
-        public string Id { get; set; }
-        public string Name { get; set; }
-        public string Status { get; set; }
     }
 }

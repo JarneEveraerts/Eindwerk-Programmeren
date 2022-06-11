@@ -18,40 +18,17 @@ namespace Fitness
     /// Interaction logic for Klant.xaml
     /// </summary>
     ///
-    public class Klant
-    {
-        public string Email { get; set; }
-        public string LastName { get; set; }
-        public string Place { get; set; }
-        public string BirthDate { get; set; }
-        public string Interest { get; set; }
-        public string Subsciption { get; set; }
-        public string Id { get; set; }
-        public string FirstName { get; set; }
-
-        public Klant(List<string> data)
-        {
-            Id = data[0];
-            FirstName = data[1];
-            LastName = data[2];
-            Email = data[3];
-            Place = data[4];
-            BirthDate = data[5];
-            Interest = data[6];
-            Subsciption = data[7];
-        }
-    }
 
     public partial class Reservatie : Window
     {
         public List<int> SelectedSlots { get; private set; } = new();
         public List<int> ReservedSlots { get; private set; }
-        public Klant Klant { get; set; }
+        public Costumer Client { get; set; }
 
         public Reservatie(List<string> dataList)
         {
-            Klant = new Klant(dataList);
-            this.DataContext = Klant;
+            Client = new Costumer(dataList);
+            this.DataContext = Client;
             InitializeComponent();
             SetupMachineSelection();
             SetupDate();
@@ -77,14 +54,15 @@ namespace Fitness
             if (Dpr_Date.SelectedDate.HasValue)
             {
                 DateTime date = Dpr_Date.SelectedDate.Value;
-                ReservedSlots = DbContext.ReservedSlots(Klant.Email, date);
+                ReservedSlots = DbContext.ReservedSlots(Client.Email, date);
                 Lsb_TimeSlot.Items.Clear();
-                if (DbContext.ReservatieCount(Klant.Email, date) == 4)
+                if (DbContext.ReservatieCount(Client.Email, date) == 4)
                 {
                     MessageBox.Show("Max 4 slots per day", "Error Detected in input", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 };
-                List<int> Slots = DbContext.AvailableSlots(date, Cmb_Machines.Text, Klant.Email, ReservedSlots);
+                List<int> Slots = DbContext.AvailableSlots(date, Cmb_Machines.Text, Client.Email, ReservedSlots);
+                if (Slots.Count == 0) MessageBox.Show("No machines availeble ", "O machines", MessageBoxButton.OK, MessageBoxImage.Error);
                 foreach (int s in Slots)
                 {
                     Lsb_TimeSlot.Items.Add($"{s}u: 60min");
@@ -115,7 +93,7 @@ namespace Fitness
         {
             if (Lsb_TimeSlot.SelectedItems.Count == 0) return;
             string selectedText = Lsb_TimeSlot.SelectedItems[Lsb_TimeSlot.SelectedItems.Count - 1].ToString();
-            if (Lsb_TimeSlot.SelectedItems.Count + DbContext.ReservatieCount(Klant.Email, Dpr_Date.SelectedDate.Value) > 4)
+            if (Lsb_TimeSlot.SelectedItems.Count + DbContext.ReservatieCount(Client.Email, Dpr_Date.SelectedDate.Value) > 4)
             {
                 MessageBox.Show("Max 4 slots per day", "Error Detected in input", MessageBoxButton.OK, MessageBoxImage.Error);
                 Lsb_TimeSlot.SelectedItems.Remove(selectedText);
@@ -146,14 +124,19 @@ namespace Fitness
 
         private void Btn_Reserveer_Click(object sender, RoutedEventArgs e)
         {
+            if (SelectedSlots.Count == 0)
+            {
+                MessageBox.Show("No slots selected", "Error Detected in input", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
             foreach (int item in SelectedSlots)
             {
-                DbContext.Reserveer(Klant, Cmb_Machines.SelectedValue.ToString(), Dpr_Date.SelectedDate.Value, item);
+                DbContext.Reserveer(Client, Cmb_Machines.SelectedValue.ToString(), Dpr_Date.SelectedDate.Value, item);
             }
             SelectedSlots.Clear();
             Lsb_TimeSlot.SelectedItems.Clear();
+            Cmb_Machines.Text = "";
             Dpr_Date.Text = string.Empty;
-            SetupSlots();
         }
     }
 }
