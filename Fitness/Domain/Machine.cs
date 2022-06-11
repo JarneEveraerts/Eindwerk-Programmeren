@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Fitness
+namespace Domain
 {
     public class Machine
     {
@@ -15,6 +15,7 @@ namespace Fitness
         public Machine()
         { }
 
+        // Comment: why?
         public Machine(Machine machine)
         {
             Id = machine.Id;

@@ -50,7 +50,7 @@ using (SqlConnection connect = new SqlConnection(Services.Configurator.DbConnect
     {
         string[] toestelSplit = toestel.Split(",");
         query =
-            $"INSERT INTO toestellen(T_Id,T_Name,T_Status) VALUES ('{toestelSplit[0]}','{toestelSplit[1]}','1');";
+            $"INSERT INTO toestellen(T_Name,T_Status) VALUES ('{toestelSplit[1]}','1');";
         SqlCommand cmd = new SqlCommand(query, connect);
 
         cmd.ExecuteNonQuery();

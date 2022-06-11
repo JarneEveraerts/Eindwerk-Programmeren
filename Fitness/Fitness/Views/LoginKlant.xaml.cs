@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -29,7 +30,13 @@ namespace Fitness
         private void Btn_Login_Click(object sender, RoutedEventArgs e)
         {
             string email = Txt_Email.Text;
-            DbContext.LoginKlant(this, email);
+            var result = DbContext.LoginKlant(email);
+            if (result != null)
+            {
+                Reservatie r = new(result);
+                this.Close();
+                r.Show();
+            }
         }
 
         private void Btn_Cancel_Click(object sender, RoutedEventArgs e)

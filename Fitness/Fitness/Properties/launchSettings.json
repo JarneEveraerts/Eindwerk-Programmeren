@@ -1,10 +1,12 @@
 {
   "profiles": {
     "Profile 1": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "workingDirectory": "C:\\Users\\evera\\Downloads\\Fitness"
     },
     "Profile 2": {
-      "commandName": "Executable"
+      "commandName": "Executable",
+      "executablePath": "C:\\Users\\evera\\OneDrive\\Documents\\Hogent\\Sem 2\\Programmeren Gevorderde\\Eind Opdracht\\Fitness\\Fitness\\bin\\Debug\\net6.0-windows\\Fitness 2.exe"
     }
   }
 }

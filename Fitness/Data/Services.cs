@@ -1,4 +1,6 @@
-﻿namespace Main
+﻿using Data.Configuration;
+
+namespace Data
 {
     public static class Services
     {

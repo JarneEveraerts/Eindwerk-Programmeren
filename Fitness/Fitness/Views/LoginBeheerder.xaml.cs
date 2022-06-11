@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -30,7 +31,13 @@ namespace Fitness
         {
             string password = Txt_Password.Text;
             string username = Txt_Username.Text;
-            DbContext.LoginBeheerder(username, password, this);
+            var result = DbContext.LoginBeheerder(username, password);
+            if (result)
+            {
+                Beheerder b = new();
+                this.Close();
+                b.Show();
+            }
         }
 
         private void Btn_Cancel_Click(object sender, RoutedEventArgs e)

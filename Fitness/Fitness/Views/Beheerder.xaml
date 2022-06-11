@@ -10,7 +10,12 @@
         <DataGrid Name="Dtg_Machines" HorizontalAlignment="Left" MinWidth="200" Height="300" Margin="10,10,0,0" VerticalAlignment="Top" SelectionChanged="Dtg_Machines_SelectionChanged" IsReadOnly = "True" />
         <ComboBox x:Name="Cmb_Status" HorizontalAlignment="Left" Height="25" Margin="427,62,0,0" VerticalAlignment="Top" Width="100" SelectedItem="{Binding Status,Mode=OneWay}" IsSynchronizedWithCurrentItem="True" />
         <Label x:Name="lbl_Machine" Content="Machine" HorizontalAlignment="Center" Height="25" Margin="0,32,0,0" VerticalAlignment="Top" />
-        <Label x:Name="Lbl_Status" Content="Status" HorizontalAlignment="Left" Height="25" Margin="412,32,0,0" VerticalAlignment="Top" Width="88" />
+        <Label x:Name="Lbl_Status" Content="Status" HorizontalAlignment="Left" Height="25" Margin="427,32,0,0" VerticalAlignment="Top" Width="88" />
         <TextBox x:Name="Txt_MachineName" HorizontalAlignment="Left" Margin="272,62,0,0" TextWrapping="Wrap" Text="{Binding Mode=OneWay,Path=Name}" IsReadOnly = "True" VerticalAlignment="Top" Width="150" Height="25" />
+        <Button x:Name="Btn_Delete" Content="Delete" Width="100" Height="30" Margin="272,102,228,178" Click="Btn_Delete_Click" />
+        <Button x:Name="Btn_Edit" Content="Edit" Width="100" Height="30" Margin="427,102,73,178" Click="Btn_Edit_Click" />
+        <Button x:Name="Btn_Add" Content="Add" Width="100" Height="30" Margin="272,247,228,33" Click="Btn_Add_Click" />
+        <Label Content="Add machine:"  Height="26" Margin="272,188,246,0" VerticalAlignment="Top" />
+        <TextBox x:Name="Txt_Input"  Height="25" Margin="272,219,178,71" TextWrapping="Wrap"  Width="150" IsReadOnlyCaretVisible="True" IsManipulationEnabled="True" Text="{Binding LastName, Mode=OneWay}" />
     </Grid>
 </Window>

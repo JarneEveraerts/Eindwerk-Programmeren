@@ -1,4 +1,4 @@
-﻿namespace Main
+﻿namespace Data.Configuration
 {
     public interface IConfigurator
     {

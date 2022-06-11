@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Data;
+using Domain;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,9 +27,9 @@ namespace Fitness
         public List<int> ReservedSlots { get; private set; }
         public Costumer Client { get; set; }
 
-        public Reservatie(List<string> dataList)
+        public Reservatie(Costumer client)
         {
-            Client = new Costumer(dataList);
+            Client = client;
             this.DataContext = Client;
             InitializeComponent();
             SetupMachineSelection();
@@ -62,7 +64,6 @@ namespace Fitness
                     return;
                 };
                 List<int> Slots = DbContext.AvailableSlots(date, Cmb_Machines.Text, Client.Email, ReservedSlots);
-                if (Slots.Count == 0) MessageBox.Show("No machines availeble ", "O machines", MessageBoxButton.OK, MessageBoxImage.Error);
                 foreach (int s in Slots)
                 {
                     Lsb_TimeSlot.Items.Add($"{s}u: 60min");
@@ -134,9 +135,10 @@ namespace Fitness
                 DbContext.Reserveer(Client, Cmb_Machines.SelectedValue.ToString(), Dpr_Date.SelectedDate.Value, item);
             }
             SelectedSlots.Clear();
-            Lsb_TimeSlot.SelectedItems.Clear();
-            Cmb_Machines.Text = "";
             Dpr_Date.Text = string.Empty;
+            Lsb_TimeSlot.SelectedItems.Clear();
+            Lsb_TimeSlot.Items.Clear();
+            Cmb_Machines.Text = "";
         }
     }
 }

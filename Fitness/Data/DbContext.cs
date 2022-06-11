@@ -6,89 +6,86 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using System.Windows;
-using System.Windows.Media.Animation;
 using System.Xml;
-using Main;
 using Microsoft.Data.SqlClient;
+using Domain;
 
-namespace Fitness;
+namespace Data;
 
 public static class DbContext
 {
     #region Login
 
-    public static void LoginBeheerder(string? username, string? password, LoginBeheerder loginBeheerder)
+    public static bool LoginBeheerder(string? username, string? password)
     {
-        string checkPass = "";
         if (username == "" || password == "")
         {
-            MessageBox.Show("Invalid Username/Password", "Error Detected in input", MessageBoxButton.OK, MessageBoxImage.Error);
-            return;
+            return false;
         }
-        using (SqlConnection connect = new(Services.Configurator.DbConnection))
+        using SqlConnection connect = new(Services.Configurator.DbConnection);
+        connect.Open();
+
+        string query = $"SELECT 1 FROM beheerder WHERE B_Name = @username AND B_Password = @password;";
+        SqlCommand cmd = new(query, connect);
+        cmd.Parameters.AddWithValue("@username", username);
+        cmd.Parameters.AddWithValue("@password", password);
+        var validLogin = cmd.ExecuteScalar() as int?;
+        connect.Close();
+        if (validLogin.HasValue && validLogin.Value == 1)
         {
-            connect.Open();
-            string query = $"SELECT B_Password FROM beheerder WHERE B_Name = '{username}';";
-            SqlCommand cmd = new(query, connect);
-            checkPass = cmd.ExecuteScalar().ToString();
-            connect.Close();
+            return true;
         }
-        if (password != checkPass)
-        {
-            MessageBox.Show("Invalid Username/Password", "Error Detected in input", MessageBoxButton.OK, MessageBoxImage.Error);
-            return;
-        }
-        Beheerder beheerder = new(username);
-        beheerder.Show();
-        loginBeheerder.Close();
+        return false;
     }
 
-    public static void LoginKlant(LoginKlant loginKlant, string? email)
+    public static Costumer LoginKlant(string? email)
     {
         List<string> dataKlant = new();
         using SqlConnection connect = new(Services.Configurator.DbConnection);
         connect.Open();
-        string query = $"SELECT * FROM klant WHERE K_Email = '{email}';";
+        string query = $"SELECT * FROM klant WHERE K_Email = @email;";
         SqlCommand cmd = new(query, connect);
+        cmd.Parameters.AddWithValue("@email", email);
         using SqlDataReader reader = cmd.ExecuteReader();
-        if (reader.HasRows)
+        if (!reader.HasRows)
         {
-            while (reader.Read())
+            connect.Close();
+            return null;
+        }
+
+        while (reader.Read())
+        {
+            for (int i = 0; i < 8; i++)
             {
-                for (int i = 0; i < 8; i++)
+                switch (i)
                 {
-                    switch (i)
-                    {
-                        case 6:
-                            dataKlant.Add(CheckInterest(reader.GetSqlValue(i).ToString()));
-                            break;
+                    case 6:
+                        dataKlant.Add(CheckInterest(reader.GetSqlValue(i).ToString()));
+                        break;
 
-                        case 7:
-                            dataKlant.Add(CheckSubscription(reader.GetSqlValue(i).ToString()));
-                            break;
+                    case 7:
+                        dataKlant.Add(CheckSubscription(reader.GetSqlValue(i).ToString()));
+                        break;
 
-                        default:
-                            dataKlant.Add(reader.GetSqlValue(i).ToString());
-                            break;
-                    }
+                    default:
+                        dataKlant.Add(reader.GetSqlValue(i).ToString());
+                        break;
                 }
             }
-            connect.Close();
-            reader.Close();
-            Reservatie klant = new(dataKlant);
-            klant.Show();
-            loginKlant.Close();
         }
-        else
-        {
-            MessageBox.Show("Invalid Email", "Error Detected in input", MessageBoxButton.OK, MessageBoxImage.Error);
-            connect.Close();
-        }
+        Costumer costumer = new(dataKlant);
+        connect.Close();
+        reader.Close();
+        return costumer;
     }
 
     #endregion Login
 
     #region Conversion
+
+    /* - Comment
+     * - Dit zou gewoon gejoined moeten zijn in de initial SQL command
+     */
 
     public static string? CheckInterest(string id)
     {
@@ -106,6 +103,10 @@ public static class DbContext
         return output;
     }
 
+    /* - Comment
+     * - See above
+     */
+
     public static string CheckSubscription(string id)
     {
         string output = "";
@@ -121,6 +122,10 @@ public static class DbContext
         return output;
     }
 
+    /* - Comment
+     * - See above
+     */
+
     public static string CheckStatusId(string id)
     {
         string output = "";
@@ -135,6 +140,10 @@ public static class DbContext
         }
         return output;
     }
+
+    /* - Comment
+     * - See above
+     */
 
     public static int CheckStatus(string status)
     {
@@ -153,7 +162,7 @@ public static class DbContext
 
     #endregion Conversion
 
-    #region setup
+    #region Setup
 
     public static List<string> CheckMachine()
     {
@@ -181,8 +190,11 @@ public static class DbContext
         int j = 0;
         for (int i = 8; i < 23; i++)
         {
-            string query = $"SELECT COUNT(*) FROM reservatie WHERE R_Date = '{date:yyyyMMdd}' AND R_Toestel = '{machine}' AND R_Slot = '{i}' AND R_Email= '{email}' ;";
+            string query = $"SELECT COUNT(*) FROM reservatie WHERE R_Date = '{date:yyyyMMdd}' AND R_Toestel = @machine AND R_Slot = @slot AND R_Email= @machine ;";
             SqlCommand cmd = new(query, connect);
+            cmd.Parameters.AddWithValue("@machine", machine);
+            cmd.Parameters.AddWithValue("@slot", i);
+            cmd.Parameters.AddWithValue("@email", email);
             if ((int)cmd.ExecuteScalar() == 1) continue;
 
             if (reserverdSlots.Count > 0)
@@ -190,6 +202,7 @@ public static class DbContext
                 List<int> checkList = new(reserverdSlots);
                 checkList.Add(i);
                 checkList.Sort();
+                // Comment: ????
                 foreach (int s in checkList)
                 {
                     j = 0;
@@ -202,8 +215,10 @@ public static class DbContext
             }
             if (j == 2) continue;
 
-            query = $"SELECT COUNT(R_Id) FROM reservatie WHERE R_Date = '{date:yyyyMMdd}' AND R_Toestel = '{machine}' AND R_Slot = '{i}' ;";
+            query = $"SELECT COUNT(R_Id) FROM reservatie WHERE R_Date = '{date:yyyyMMdd}' AND R_Toestel = @machine AND R_Slot = @slot ;";
             cmd = new(query, connect);
+            cmd.Parameters.AddWithValue("@slot", i);
+            cmd.Parameters.AddWithValue("@machine", machine);
             if ((int)cmd.ExecuteScalar() < MachineCount(machine)) slots.Add(i);
         }
         return slots;
@@ -214,8 +229,9 @@ public static class DbContext
         using SqlConnection connect = new(Services.Configurator.DbConnection);
         connect.Open();
         List<int> slots = new();
-        string query = $"SELECT R_Slot FROM reservatie WHERE R_Date = '{date:yyyyMMdd}' AND R_Email = '{email}';";
+        string query = $"SELECT R_Slot FROM reservatie WHERE R_Date = '{date:yyyyMMdd}' AND R_Email = @email;";
         SqlCommand cmd = new(query, connect);
+        cmd.Parameters.AddWithValue("@email", email);
         using SqlDataReader reader = cmd.ExecuteReader();
         if (reader.HasRows)
         {
@@ -227,7 +243,7 @@ public static class DbContext
         return slots;
     }
 
-    #endregion setup
+    #endregion Setup
 
     #region Count
 
@@ -255,8 +271,14 @@ public static class DbContext
     {
         using SqlConnection connect = new(Services.Configurator.DbConnection);
         connect.Open();
-        string query = $"INSERT INTO Reservatie(R_Kid,R_FirstName,R_Name,R_Email,R_Toestel,R_Date,R_Slot) VALUES('{costumer.Id}','{costumer.FirstName}','{costumer.LastName}','{costumer.Email}','{machine}','{date:yyyyMMdd}','{slot}');";
+        string query = $"INSERT INTO Reservatie(R_Kid,R_FirstName,R_Name,R_Email,R_Toestel,R_Date,R_Slot) VALUES(@id,@firstName,@lastName,@email,@machine,'{date:yyyyMMdd}',@slot);";
         SqlCommand cmd = new(query, connect);
+        cmd.Parameters.AddWithValue("@id", costumer.Id);
+        cmd.Parameters.AddWithValue("@firstName", costumer.FirstName);
+        cmd.Parameters.AddWithValue("@lastName", costumer.LastName);
+        cmd.Parameters.AddWithValue("@email", costumer.Email);
+        cmd.Parameters.AddWithValue("@slot", slot);
+        cmd.Parameters.AddWithValue("@machine", machine);
         cmd.ExecuteNonQuery();
     }
 
@@ -267,17 +289,17 @@ public static class DbContext
         string query = $"INSERT INTO Toestellen(T_Name,T_Status) VALUES('{input}','1');";
         SqlCommand cmd = new(query, connect);
         cmd.ExecuteNonQuery();
-        MessageBox.Show("Machine added", "Machine added", MessageBoxButton.OK, MessageBoxImage.Exclamation);
     }
 
-    public static void RemoveMachine(int id, string name)
+    public static void RemoveMachine(Machine machine)
     {
         using SqlConnection connect = new(Services.Configurator.DbConnection);
         connect.Open();
-        string query = $"DELETE FROM Toestellen WHERE T_Id ='{id}' AND T_Name = '{name}' ;";
+        string query = $"DELETE FROM Toestellen WHERE T_Id = @id AND T_Name = @name ;";
         SqlCommand cmd = new(query, connect);
+        cmd.Parameters.AddWithValue("@id", machine.Id);
+        cmd.Parameters.AddWithValue("@name", machine.Name);
         cmd.ExecuteNonQuery();
-        MessageBox.Show("Deletion complete", "Deletion complete", MessageBoxButton.OK, MessageBoxImage.Exclamation);
     }
 
     public static void UpdateStatus(Machine machine, int status)
@@ -287,13 +309,12 @@ public static class DbContext
         string query = $"UPDATE Toestellen SET T_Status = '{status}'WHERE T_Id ='{machine.Id}' AND T_Name = '{machine.Name}' ;";
         SqlCommand cmd = new(query, connect);
         cmd.ExecuteNonQuery();
-        MessageBox.Show("Update complete", "Update complete", MessageBoxButton.OK, MessageBoxImage.Exclamation);
     }
 
     public static List<KeyValuePair<int, string>> AllMachines()
     {
         using SqlConnection connect = new(Services.Configurator.DbConnection);
-        List<KeyValuePair<int, string>> machines = new List<KeyValuePair<int, string>>();
+        var machines = new List<KeyValuePair<int, string>>();
         string query = $"SELECT T_Id,T_Name FROM Toestellen;";
         SqlCommand cmd = new(query, connect);
         connect.Open();
