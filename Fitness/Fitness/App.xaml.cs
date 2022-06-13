@@ -22,5 +22,10 @@ namespace Fitness
             Services.Configurator = new Configurator(e.Args);
             _loginWindow.Show();
         }
+
+        private void Application_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        {
+            MessageBox.Show("Error!", "Error detected!", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
     }
 }

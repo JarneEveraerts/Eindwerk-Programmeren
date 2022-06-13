@@ -30,24 +30,27 @@ namespace Fitness
         private void Btn_Login_Click(object sender, RoutedEventArgs e)
         {
             string email = Txt_Email.Text;
-            var result = DbContext.LoginKlant(email);
-            if (result != null)
+            if (email == "")
             {
-                Reservatie r = new(result);
-                this.Close();
-                r.Show();
+                MessageBox.Show("Empty field", "Error detected!", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
             }
+            var result = DbContext.LoginKlant(email);
+            if (result == null)
+            {
+                MessageBox.Show("Invalid Email", "Error detected!", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            Reservatie r = new(result);
+            this.Close();
+            r.Show();
         }
 
         private void Btn_Cancel_Click(object sender, RoutedEventArgs e)
         {
             _loginWindow = new();
-            _loginWindow.Show();
             this.Close();
-        }
-
-        private void Txt_Email_TextChanged(object sender, TextChangedEventArgs e)
-        {
+            _loginWindow.Show();
         }
     }
 }

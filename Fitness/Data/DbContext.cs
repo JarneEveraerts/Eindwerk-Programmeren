@@ -83,10 +83,6 @@ public static class DbContext
 
     #region Conversion
 
-    /* - Comment
-     * - Dit zou gewoon gejoined moeten zijn in de initial SQL command
-     */
-
     public static string? CheckInterest(string id)
     {
         string? output = "";
@@ -103,10 +99,6 @@ public static class DbContext
         return output;
     }
 
-    /* - Comment
-     * - See above
-     */
-
     public static string CheckSubscription(string id)
     {
         string output = "";
@@ -122,10 +114,6 @@ public static class DbContext
         return output;
     }
 
-    /* - Comment
-     * - See above
-     */
-
     public static string CheckStatusId(string id)
     {
         string output = "";
@@ -140,10 +128,6 @@ public static class DbContext
         }
         return output;
     }
-
-    /* - Comment
-     * - See above
-     */
 
     public static int CheckStatus(string status)
     {

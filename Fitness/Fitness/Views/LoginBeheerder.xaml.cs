@@ -31,13 +31,21 @@ namespace Fitness
         {
             string password = Txt_Password.Text;
             string username = Txt_Username.Text;
-            var result = DbContext.LoginBeheerder(username, password);
-            if (result)
+            if (password == "" || username == "")
             {
-                Beheerder b = new();
-                this.Close();
-                b.Show();
+                MessageBox.Show("Empty field", "Error detected!", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
             }
+            password.Any(c => char.IsPunctuation(c));
+            var result = DbContext.LoginBeheerder(username, password);
+            if (!result)
+            {
+                MessageBox.Show("Invalid username/password", "Error detected!", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            Beheerder b = new();
+            this.Close();
+            b.Show();
         }
 
         private void Btn_Cancel_Click(object sender, RoutedEventArgs e)
